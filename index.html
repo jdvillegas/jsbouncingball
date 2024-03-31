@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<head>
+    <style>
+        canvas {
+            background-color: lightblue; /* Color de fondo */
+            border: 5px solid darkblue; /* Borde con ancho de 5 píxeles y color oscuro */
+        }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+
+</body>
+<script>
+    const canvas = document.querySelector('canvas');
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = 400;
+    canvas.height = 400;
+
+    //Variables de la pelota. 
+    const ballRadius = 30;
+    let x = canvas.width/2;
+    let y = canvas.height - 30;
+    //Velocidad de la pelota
+    let dx = 2;
+    let dy = -2;
+
+    function capturarClic(event) {
+        // Obtiene las coordenadas del clic
+        var xClic = event.clientX - canvas.getBoundingClientRect().left;
+        var yClic = event.clientY - canvas.getBoundingClientRect().top;
+                    // Calcula la distancia entre el clic y el centro de la bola
+        var distancia = Math.sqrt(Math.pow(xClic - x, 2) + Math.pow(yClic - y, 2));
+
+                    // Comprueba si el clic está dentro de la bola
+        dx = dx++;
+        dy = dy--;
+        
+        if (distancia <= ballRadius) {
+                alert("Haz Ganado!!!");
+            
+        }
+
+
+    }
+
+    canvas.addEventListener("click", capturarClic);
+
+    function drawBall()
+    {
+        ctx.beginPath();
+        ctx.arc(x,y,ballRadius,0,Math.PI*2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+        ctx.closePath();
+ 
+    }
+
+    function drawBallMovement()
+    {
+        checkCollitions();
+        x += dx;
+        y += dy;
+
+    }
+
+    function cleanCanvas()
+    {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+    }
+
+    function checkCollitions()
+    {
+        if((x+dx+ballRadius)>=canvas.width || (x+dx-ballRadius)<=0 ){
+            dx = -dx;
+
+        }
+        if(y+dy-ballRadius<0 || y+dy+ballRadius >=canvas.height ){
+            dy =-dy;
+        }
+   
+
+    }
+
+    function draw()
+    {
+        
+        cleanCanvas();
+        drawBall();
+       
+        drawBallMovement();
+        
+        console.log('Aqui redibuja....');
+        requestAnimationFrame(draw);
+    }
+    
+
+    draw();
+
+</script>
+</html>
